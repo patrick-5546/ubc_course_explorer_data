@@ -222,10 +222,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update the files containing the course information data used by '
                                                  'the application, scraping it from various websites. Select which '
                                                  'files to update using the arguments below.')
-    parser.add_argument('-c', '--available_courses', help='update available_courses.json', action='store_true')
-    parser.add_argument('-i', '--course_information', help='update course_information.json', action='store_true')
-    parser.add_argument('-s', '--course_statistics', help='update course_statistics.json', action='store_true')
-    parser.add_argument('-d', '--grade_distributions', help='update grade_distributions.json', action='store_true')
+    parser.add_argument('-c', '--available_courses', help=f"update {AVAILABLE_COURSES_FN}", action='store_true')
+    parser.add_argument('-i', '--course_information', help=f"update {COURSE_INFORMATION_FN}", action='store_true')
+    parser.add_argument('-s', '--course_statistics', help=f"update {COURSE_STATISTICS_FN}", action='store_true')
+    parser.add_argument('-d', '--grade_distributions', help=f"update {GRADE_DISTRIBUTIONS_FN}", action='store_true')
     args = parser.parse_args()
 
     if args.available_courses:
