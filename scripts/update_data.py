@@ -60,22 +60,26 @@ def _get_course_labels_list(subject):
     '''Returns a list of all distinct course labels in a subject.'''
     print(f"Getting the course labels list for {subject}")
 
-    # list of dictionaries for each course in a subject, for example with subject == 'MATH'
+    # list of dictionaries for each course in a subject, for example with subject == 'APSC'
     # {
-    #     "course": "110",
-    #     "course_title": "Differential Calculus",
-    #     "detail": ""
+    #     "course": "496",
+    #     "course_title": "Interdisciplinary Engineering Design Project",
+    #     "detail": "D"
     # }
     url = f"{GR_API_URL}/courses/{GR_CAMPUS}/{subject}"
     courses_list = requests.get(url).json()
 
-    return [course_dict['course'] for course_dict in courses_list]
+    # Set comprehension was used because there are some entries with the same 'course' and 'detail' values, but
+    # different 'course_title' values, as they could change across the years
+    return sorted(list({f"{course_dict['course']}{course_dict['detail']}" for course_dict in courses_list}))
 
 
 def update_course_information_dict():
     '''Saves a dictionary of the course information for all courses to a json file at COURSE_INFORMATION_PATH.
         - Keys are course names: i.e, 'MATH 210'
-        - Values are dictionaries of information, identical to the example below without the 'dept' and 'code' entries
+        - Values are dictionaries of information, identical to the example below without the 'dept', 'code', and 'link'
+          entries
+            - Will manually form link from course subject, number, and detail, as this API does not use detail
     '''
     print('updating course information')
 
@@ -104,7 +108,7 @@ def update_course_information_dict():
     courses_info_list = requests.get(url).json()
 
     courses_info_dict = {course_info_dict['code']: {k: v for k, v in course_info_dict.items()
-                         if k not in ['dept', 'code']} for course_info_dict in courses_info_list}
+                         if k not in ['dept', 'code', 'link']} for course_info_dict in courses_info_list}
 
     _dump_json(COURSE_INFORMATION_FN, courses_info_dict)
 
@@ -112,8 +116,8 @@ def update_course_information_dict():
 def update_course_statistics_dict():
     '''Saves a dictionary of the course statistics for all courses to a json file at COURSE_STATISTICS_PATH.
         - Keys are course names: i.e, 'ENGL 100'
-        - Values are dictionaries of information, identical to the example below without the 'campus', 'course', and
-          'subject' entries
+        - Values are dictionaries of information, identical to the example below without the 'campus', 'course',
+          'detail', and 'subject' entries
     '''
     print('updating course statistics')
 
@@ -140,8 +144,8 @@ def update_course_statistics_dict():
         sub_courses_stats_list = requests.get(url).json()
 
         course_stats_dict.update(
-            {f"{sub_course_stats_dict['subject']} {sub_course_stats_dict['course']}":
-             {k: v for k, v in sub_course_stats_dict.items() if k not in ['campus', 'course', 'subject']}
+            {f"{sub_course_stats_dict['subject']} {sub_course_stats_dict['course']}{sub_course_stats_dict['detail']}":
+             {k: v for k, v in sub_course_stats_dict.items() if k not in ['campus', 'course', 'detail', 'subject']}
              for sub_course_stats_dict in sub_courses_stats_list}
         )
 
@@ -152,7 +156,7 @@ def update_grade_distributions_dict():
     '''Saves a dictionary of the grade distributions for all courses to a json file at GRADE_DISTRIBUTIONS_PATH.
         - Keys are course names: i.e, 'ENGL 100'
         - Values are lists of dictionaries, where the dictionaries are identical to the example below without the
-          'campus', 'course', 'section', and 'subject' entries
+          'campus', 'course', 'detail', 'section', and 'subject' entries
             - Only the overall distributions are saved for each term the course is offered, not individual sections
             - Most recent sections are first
     '''
@@ -189,9 +193,12 @@ def update_grade_distributions_dict():
 
         for term_grade_distr_dict in term_grade_distrs_list:
             if term_grade_distr_dict['section'] == 'OVERALL':
-                course_name = f"{term_grade_distr_dict['subject']} {term_grade_distr_dict['course']}"
+                course_name = (f"{term_grade_distr_dict['subject']} {term_grade_distr_dict['course']}"
+                               f"{term_grade_distr_dict['detail']}"
+                )
                 grade_distrs_dict[course_name].append({k: v for k, v in term_grade_distr_dict.items()
-                                                       if k not in ['campus', 'course', 'section', 'subject']})
+                                                       if k not in ['campus', 'course', 'detail',
+                                                                    'section', 'subject']})
 
     _dump_json(GRADE_DISTRIBUTIONS_FN, grade_distrs_dict)
 
