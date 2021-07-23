@@ -14,7 +14,7 @@ import json
 import os
 import requests
 
-# File paths
+# data files
 DATA_DIR_PATH = '.'  # files are located in the repository's root directory
 AVAILABLE_COURSES_FN = 'available_courses.json'
 COURSE_INFORMATION_FN = 'course_information.json'
@@ -162,7 +162,7 @@ def update_grade_distributions_dict():
     '''
     print('updating grade distributions')
 
-    grade_distrs_dict = defaultdict(list)
+    grade_distrs_dict = defaultdict(list)  # dictionary where the default value of new keys is an empty list
     for term in _get_available_terms_list():
         print(f"Getting the overall grade distributions for the courses in {term}")
 
@@ -217,6 +217,7 @@ def _get_available_terms_list():
 
 
 def _dump_json(filename, object):
+    '''Saves an object to a json file.'''
     path = os.path.join(DATA_DIR_PATH, filename)
     with open(path, 'w') as json_file:
         json.dump(object, json_file)
