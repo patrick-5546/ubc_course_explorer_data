@@ -194,8 +194,7 @@ def update_grade_distributions_dict():
         for term_grade_distr_dict in term_grade_distrs_list:
             if term_grade_distr_dict['section'] == 'OVERALL':
                 course_name = (f"{term_grade_distr_dict['subject']} {term_grade_distr_dict['course']}"
-                               f"{term_grade_distr_dict['detail']}"
-                )
+                               f"{term_grade_distr_dict['detail']}")
                 grade_distrs_dict[course_name].append({k: v for k, v in term_grade_distr_dict.items()
                                                        if k not in ['campus', 'course', 'detail',
                                                                     'section', 'subject']})
