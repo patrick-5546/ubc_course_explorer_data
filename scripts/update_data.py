@@ -11,6 +11,7 @@ Notes:
 import argparse
 from collections import defaultdict
 import json
+import math
 import os
 import requests
 
@@ -20,6 +21,7 @@ AVAILABLE_COURSES_FN = 'available_courses.json'
 COURSE_INFORMATION_FN = 'course_information.json'
 COURSE_STATISTICS_FN = 'course_statistics.json'
 GRADE_DISTRIBUTIONS_FN = 'grade_distributions.json'
+PROFESSOR_INFORMATION_FN = 'professors_information.json'
 
 # ubcgrades
 GR_API_URL = 'https://ubcgrades.com/api/v2'
@@ -28,9 +30,13 @@ GR_CAMPUS = 'UBCV'
 # ubcexplorer
 EX_API_URL = 'https://ubcexplorer.io'
 
+# rmp
+RMP_API_URL = 'http://www.ratemyprofessors.com/filter/professor'
+RMP_CAMPUS_ID = 1413
+
 
 def update_available_courses_dict():
-    '''Save a dictionary of the available courses to a json file at AVAILABLE_COURSES_PATH.
+    '''Save a dictionary of the available courses to a json file.
         - Keys are subjects: i.e., 'APSC'
         - Values are a list of their course labels: i.e., ['100', '101', '150', ...]
     '''
@@ -75,7 +81,7 @@ def _get_course_labels_list(subject):
 
 
 def update_course_information_dict():
-    '''Saves a dictionary of the course information for all courses to a json file at COURSE_INFORMATION_PATH.
+    '''Saves a dictionary of the course information for all courses to a json file.
         - Keys are course names: i.e, 'MATH 210'
         - Values are dictionaries of information, identical to the example below without the 'dept', 'code', and 'link'
           entries
@@ -114,7 +120,7 @@ def update_course_information_dict():
 
 
 def update_course_statistics_dict():
-    '''Saves a dictionary of the course statistics for all courses to a json file at COURSE_STATISTICS_PATH.
+    '''Saves a dictionary of the course statistics for all courses to a json file.
         - Keys are course names: i.e, 'ENGL 100'
         - Values are dictionaries of information, identical to the example below without the 'campus', 'course',
           'detail', and 'subject' entries
@@ -123,7 +129,7 @@ def update_course_statistics_dict():
 
     course_stats_dict = dict()
     for subject in _get_subjects_list():
-        print(f"Getting the course statistics for the courses in {subject}")
+        print(f"\tGetting the course statistics for the courses in {subject}")
 
         # list of dictionaries for each course in a subject, for example with subject == 'ENGL'
         # {
@@ -153,7 +159,7 @@ def update_course_statistics_dict():
 
 
 def update_grade_distributions_dict():
-    '''Saves a dictionary of the grade distributions for all courses to a json file at GRADE_DISTRIBUTIONS_PATH.
+    '''Saves a dictionary of the grade distributions for all courses to a json file.
         - Keys are course names: i.e, 'ENGL 100'
         - Values are lists of dictionaries, where the dictionaries are identical to the example below without the
           'campus', 'course', 'detail', 'section', and 'subject' entries
@@ -164,7 +170,7 @@ def update_grade_distributions_dict():
 
     grade_distrs_dict = defaultdict(list)  # dictionary where the default value of new keys is an empty list
     for term in _get_available_terms_list():
-        print(f"Getting the overall grade distributions for the courses in {term}")
+        print(f"\nGetting the overall grade distributions for the courses in {term}")
 
         # list of dictionaries for each course section in a term, for example with term == '2020W'
         # {
@@ -216,6 +222,76 @@ def _get_available_terms_list():
     return available_terms_list
 
 
+def update_professor_information_dict():
+    '''Saves a dictionary of professor information for all professors to a json file.
+    Adapted from https://github.com/Rodantny/Rate-My-Professor-Scraper-and-Search.
+        - Keys are the professor first and last names: i.e., 'Robert Gateman'
+        - Values are lists of dictionaries of information, identical to the example below without the 'tSid',
+          'instituion_name', 'tFname', and 'tLname' entries
+            - The middle name is often missing
+            - There may be more than one element in the list (same first and last name), and there is not a way to tell
+              if the elements represent the same person, or to match that name with the other sources
+                - Thus, print the department beside the name if there are multiple entries: i.e., John Smith (Biology)
+    '''
+    print('updating professor information')
+
+    profs_info_list = _get_professor_list()
+    profs_info_dict = defaultdict(list)  # dictionary where the default value of new keys is an empty list
+    for prof_info_dict in profs_info_list:
+        prof_name = f"{prof_info_dict['tFname']} {prof_info_dict['tLname']}"
+        profs_info_dict[prof_name].append({k: v for k, v in prof_info_dict.items()
+                                           if k not in ['tSid', 'institution_name', 'tFname', 'tLname']})
+
+    _dump_json(PROFESSOR_INFORMATION_FN, profs_info_dict)
+
+
+def _get_professor_list():
+    '''Returns a list of professor information for all professors.
+
+    Professor information is in a dictionary (i.e., Robert Gateman)
+    {
+    'tDept': 'Economics',
+    'tSid': '1413',
+    'institution_name': 'University of British Columbia',
+    'tFname': 'Robert',
+    'tMiddlename': '',
+    'tLname': 'Gateman',
+    'tid': 13305,
+    'tNumRatings': 1061,
+    'rating_class': 'good',
+    'contentType': 'TEACHER',
+    'categoryType': 'PROFESSOR',
+    'overall_rating': '3.7'
+    }
+    '''
+    profs_info_list = list()
+    num_profs = _get_num_profs()
+    num_pages = math.ceil(num_profs / 20)
+    for i in range(1, num_pages + 1):
+        print(f"\tGetting professor information from page {i} out of {num_pages}")
+
+        page = requests.get(f"{RMP_API_URL}/?&page={i}&filter=teacherlastname_sort_s+asc&query=*%3A*&"
+                            f"queryoption=TEACHER&queryBy=schoolId&sid={RMP_CAMPUS_ID}")
+        temp_jsonpage = json.loads(page.content)
+
+        temp_list = temp_jsonpage['professors']
+        profs_info_list.extend(temp_list)
+
+    return profs_info_list
+
+
+def _get_num_profs():
+    '''Returns the number of professors.
+    Adapted from https://github.com/Rodantny/Rate-My-Professor-Scraper-and-Search.
+    '''
+    page = requests.get(f"{RMP_API_URL}/?&page=1&filter=teacherlastname_sort_s+asc&query=*%3A*&"
+                        f"queryoption=TEACHER&queryBy=schoolId&sid={RMP_CAMPUS_ID}")
+    temp_jsonpage = json.loads(page.content)
+
+    num_profs = temp_jsonpage['remaining'] + 20
+    return num_profs
+
+
 def _dump_json(filename, object):
     '''Saves an object to a json file.'''
     path = os.path.join(DATA_DIR_PATH, filename)
@@ -233,6 +309,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--course_information', help=f"update {COURSE_INFORMATION_FN}", action='store_true')
     parser.add_argument('-s', '--course_statistics', help=f"update {COURSE_STATISTICS_FN}", action='store_true')
     parser.add_argument('-d', '--grade_distributions', help=f"update {GRADE_DISTRIBUTIONS_FN}", action='store_true')
+    parser.add_argument('-p', '--professor_information', help=f"update {PROFESSOR_INFORMATION_FN}", action='store_true')
     args = parser.parse_args()
 
     if args.available_courses:
@@ -243,3 +320,5 @@ if __name__ == '__main__':
         update_course_statistics_dict()
     if args.grade_distributions:
         update_grade_distributions_dict()
+    if args.professor_information:
+        update_professor_information_dict()
