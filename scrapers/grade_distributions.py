@@ -4,17 +4,24 @@ import requests
 from scrapers.constants import GR_API_URL, GR_CAMPUS
 
 
-def get_grade_distributions_dict():
+def get_grade_distributions_and_teaching_team_dicts():
     '''Returns a dictionary of the grade distributions for all courses to a json file.
         - Keys are course names: i.e, 'ENGL 100'
         - Values are lists of dictionaries, where the dictionaries are identical to the example below without the
           'campus', 'course', 'detail', 'section', and 'subject' entries
             - Only the overall distributions are saved for each term the course is offered, not individual sections
             - Most recent sections are first
-    '''
-    print('updating grade distributions')
 
-    grade_distrs_dict = defaultdict(list)  # dictionary where the default value of new keys is an empty list
+    Returns a dictionary of the teaching teams for all sections of all courses to a json file.
+        - Keys are the course names: i.e., 'ENGL 100'
+        - Values are dictionaries of lists
+            - Keys are the sections number: i.e., '001'
+            - Values are a list of professors that have taught that section, sorted by recency then alphabetically
+    '''
+    print('updating grade distributions and teaching team')
+
+    grade_distrs_dict = defaultdict(list)  # default value of new keys is an empty list
+    teaching_team_dict = defaultdict(lambda: defaultdict(list))  # default value of the new keys is defaultdict(list)
     for term in _get_available_terms_list():
         print(f"\tGetting the overall grade distributions for the courses in {term}")
 
@@ -25,7 +32,7 @@ def get_grade_distributions_dict():
         #     "course": "504",
         #     "course_title": "Research Methodology in Applied Animal Biology",
         #     "detail": "",
-        #     "educators": "Daniel Weary",
+        #     "educators": "Daniel Weary;John Smith",
         #     "enrolled": 9,
         #     "faculty_title": "Faculty of Land and Food Systems",
         #     "grades": {
@@ -44,14 +51,24 @@ def get_grade_distributions_dict():
         term_grade_distrs_list = requests.get(url).json()
 
         for term_grade_distr_dict in term_grade_distrs_list:
-            if term_grade_distr_dict['section'] == 'OVERALL':
-                course_name = (f"{term_grade_distr_dict['subject']} {term_grade_distr_dict['course']}"
-                               f"{term_grade_distr_dict['detail']}")
+            course_name = (f"{term_grade_distr_dict['subject']} {term_grade_distr_dict['course']}"
+                            f"{term_grade_distr_dict['detail']}")
+            section = term_grade_distr_dict['section']
+
+            # Use the 'OVERALL' section to get the grade distribution for a course
+            if section == 'OVERALL':
                 grade_distrs_dict[course_name].append({k: v for k, v in term_grade_distr_dict.items()
                                                        if k not in ['campus', 'course', 'detail',
                                                                     'section', 'subject']})
 
-    return grade_distrs_dict
+            # Use the other sections to get the section teaching teams for a course
+            else:
+                # gets the new professors, filtering out empty strings
+                new_profs_list = sorted(list(set([p for p in term_grade_distr_dict['educators'].split(';') if p])
+                                             - set(teaching_team_dict[course_name][section])))
+                teaching_team_dict[course_name][section].extend(new_profs_list)
+
+    return grade_distrs_dict, teaching_team_dict
 
 
 def _get_available_terms_list():

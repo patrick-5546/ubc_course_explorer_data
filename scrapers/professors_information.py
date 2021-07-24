@@ -20,7 +20,7 @@ def get_professor_information_dict():
     print('updating professor information')
 
     profs_info_list = _get_professor_list()
-    profs_info_dict = defaultdict(list)  # dictionary where the default value of new keys is an empty list
+    profs_info_dict = defaultdict(list)  # default value of new keys is an empty list
     for prof_info_dict in profs_info_list:
         prof_name = f"{prof_info_dict['tFname']} {prof_info_dict['tLname']}"
         profs_info_dict[prof_name].append({k: v for k, v in prof_info_dict.items()
