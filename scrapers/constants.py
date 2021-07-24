@@ -1,8 +1,3 @@
-import json
-import os
-
-# CONSTANTS
-
 # data files
 AVAILABLE_COURSES_FN = 'available_courses.json'
 COURSE_INFORMATION_FN = 'course_information.json'
@@ -20,10 +15,3 @@ EX_API_URL = 'https://ubcexplorer.io'
 # rmp
 RMP_API_URL = 'http://www.ratemyprofessors.com/filter/professor'
 RMP_CAMPUS_ID = 1413
-
-
-def dump_json(filename, object):
-    '''Saves an object to a json file in the root directory.'''
-    with open(filename, 'w') as json_file:
-        json.dump(object, json_file)
-    print(f"Saved object to file\n")

@@ -3,11 +3,11 @@ import json
 import math
 import requests
 
-from scrapers.utilities import RMP_API_URL, RMP_CAMPUS_ID, dump_json
+from scrapers.constants import RMP_API_URL, RMP_CAMPUS_ID
 
 
-def update_professor_information_dict(filename):
-    '''Saves a dictionary of professor information for all professors to a json file.
+def get_professor_information_dict():
+    '''Returns a dictionary of professor information for all professors to a json file.
     Adapted from https://github.com/Rodantny/Rate-My-Professor-Scraper-and-Search.
         - Keys are the professor first and last names: i.e., 'Robert Gateman'
         - Values are lists of dictionaries of information, identical to the example below without the 'tSid',
@@ -26,7 +26,7 @@ def update_professor_information_dict(filename):
         profs_info_dict[prof_name].append({k: v for k, v in prof_info_dict.items()
                                            if k not in ['tSid', 'institution_name', 'tFname', 'tLname']})
 
-    dump_json(filename, profs_info_dict)
+    return profs_info_dict
 
 
 def _get_professor_list():

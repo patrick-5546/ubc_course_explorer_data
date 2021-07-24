@@ -4,19 +4,26 @@ Run from the repository's root directory with -h or --help to view the help mess
 '''
 
 import argparse
+import json
 
-from scrapers.available_courses import update_available_courses_dict
-from scrapers.course_information import update_course_information_dict
-from scrapers.course_statistics import update_course_statistics_dict
-from scrapers.grade_distributions import update_grade_distributions_dict
-from scrapers.professors_information import update_professor_information_dict
-from scrapers.utilities import (
+from scrapers.available_courses import get_available_courses_dict
+from scrapers.course_information import get_course_information_dict
+from scrapers.course_statistics import get_course_statistics_dict
+from scrapers.grade_distributions import get_grade_distributions_dict
+from scrapers.professors_information import get_professor_information_dict
+from scrapers.constants import (
     AVAILABLE_COURSES_FN,
     COURSE_INFORMATION_FN,
     COURSE_STATISTICS_FN,
     GRADE_DISTRIBUTIONS_FN,
     PROFESSOR_INFORMATION_FN
 )
+
+def dump_json(filename, object):
+    '''Saves an object to a json file in the root directory.'''
+    with open(filename, 'w') as json_file:
+        json.dump(object, json_file)
+    print(f"Saved object to {filename}")
 
 
 if __name__ == '__main__':
@@ -32,12 +39,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.available_courses:
-        update_available_courses_dict(AVAILABLE_COURSES_FN)
+        dump_json(AVAILABLE_COURSES_FN, get_available_courses_dict())
     if args.course_information:
-        update_course_information_dict(COURSE_INFORMATION_FN)
+        dump_json(COURSE_INFORMATION_FN, get_course_information_dict())
     if args.course_statistics:
-        update_course_statistics_dict(COURSE_STATISTICS_FN)
+        dump_json(COURSE_STATISTICS_FN, get_course_statistics_dict())
     if args.grade_distributions:
-        update_grade_distributions_dict(GRADE_DISTRIBUTIONS_FN)
+        dump_json(GRADE_DISTRIBUTIONS_FN, get_grade_distributions_dict())
     if args.professor_information:
-        update_professor_information_dict(PROFESSOR_INFORMATION_FN)
+        dump_json(PROFESSOR_INFORMATION_FN, get_professor_information_dict())

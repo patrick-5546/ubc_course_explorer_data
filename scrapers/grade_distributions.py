@@ -1,11 +1,11 @@
 from collections import defaultdict
 import requests
 
-from scrapers.utilities import GR_API_URL, GR_CAMPUS, dump_json
+from scrapers.constants import GR_API_URL, GR_CAMPUS
 
 
-def update_grade_distributions_dict(filename):
-    '''Saves a dictionary of the grade distributions for all courses to a json file.
+def get_grade_distributions_dict():
+    '''Returns a dictionary of the grade distributions for all courses to a json file.
         - Keys are course names: i.e, 'ENGL 100'
         - Values are lists of dictionaries, where the dictionaries are identical to the example below without the
           'campus', 'course', 'detail', 'section', and 'subject' entries
@@ -51,7 +51,7 @@ def update_grade_distributions_dict(filename):
                                                        if k not in ['campus', 'course', 'detail',
                                                                     'section', 'subject']})
 
-    dump_json(filename, grade_distrs_dict)
+    return grade_distrs_dict
 
 
 def _get_available_terms_list():

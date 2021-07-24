@@ -1,10 +1,10 @@
 import requests
 
-from scrapers.utilities import EX_API_URL, dump_json
+from scrapers.constants import EX_API_URL
 
 
-def update_course_information_dict(filename):
-    '''Saves a dictionary of the course information for all courses to a json file.
+def get_course_information_dict():
+    '''Returns a dictionary of the course information for all courses to a json file.
         - Keys are course names: i.e, 'MATH 210'
         - Values are dictionaries of information, identical to the example below without the 'dept', 'code', and 'link'
           entries
@@ -39,4 +39,4 @@ def update_course_information_dict(filename):
     courses_info_dict = {course_info_dict['code']: {k: v for k, v in course_info_dict.items()
                          if k not in ['dept', 'code', 'link']} for course_info_dict in courses_info_list}
 
-    dump_json(filename, courses_info_dict)
+    return courses_info_dict
