@@ -1,11 +1,6 @@
 '''
 Update the course information data used by the application, scraping it from various websites.
 Run from the repository's root directory with -h or --help to view the help message and arguments.
-
-Notes:
-    - The gr prefix is for ubcgrades.com
-    - The ex prefix is for ubcexplorer.io
-    - The rmp prefix is for ratemyprofessors.com
 '''
 
 import argparse
