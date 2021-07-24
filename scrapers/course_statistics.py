@@ -12,7 +12,7 @@ def get_course_statistics_dict():
     '''
     print('updating course statistics')
 
-    course_stats_dict = dict()
+    course_stats_dict = {}
     for subject in get_subjects_list():
         print(f"\tGetting the course statistics for the courses in {subject}")
 

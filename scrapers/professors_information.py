@@ -48,7 +48,7 @@ def _get_professor_list():
     'overall_rating': '3.7'
     }
     '''
-    profs_info_list = list()
+    profs_info_list = []
     num_profs = _get_num_profs()
     num_pages = math.ceil(num_profs / 20)
     for i in range(1, num_pages + 1):

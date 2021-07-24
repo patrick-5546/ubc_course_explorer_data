@@ -10,7 +10,7 @@ def get_available_courses_dict():
     '''
     print('updating available courses')
 
-    avail_courses_dict = dict()
+    avail_courses_dict = {}
     for subject in get_subjects_list():
         avail_courses_dict[subject] = _get_course_labels_list(subject)
 
