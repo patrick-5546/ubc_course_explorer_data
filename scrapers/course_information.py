@@ -1,6 +1,6 @@
 import requests
 
-from utilities import EX_API_URL, COURSE_INFORMATION_FN, dump_json
+from scrapers.utilities import EX_API_URL, COURSE_INFORMATION_FN, dump_json
 
 
 def update_course_information_dict():

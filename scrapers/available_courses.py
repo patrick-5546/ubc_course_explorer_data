@@ -1,6 +1,6 @@
 import requests
 
-from utilities import GR_API_URL, GR_CAMPUS, AVAILABLE_COURSES_FN, dump_json
+from scrapers.utilities import GR_API_URL, GR_CAMPUS, AVAILABLE_COURSES_FN, dump_json
 
 
 def update_available_courses_dict():

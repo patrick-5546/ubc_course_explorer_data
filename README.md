@@ -6,5 +6,5 @@ Raw data and their update scripts for the [UBC Course Explorer](https://github.c
 - To view the help message and arguments for the update script, run the following command in this repository's root directory
 
     ```sh
-    py scripts/update_all_data.py -h
+    py update_data.py -h
     ```

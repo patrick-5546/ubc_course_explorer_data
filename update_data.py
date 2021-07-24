@@ -10,12 +10,12 @@ Notes:
 
 import argparse
 
-from available_courses import update_available_courses_dict
-from course_information import update_course_information_dict
-from course_statistics import update_course_statistics_dict
-from grade_distributions import update_grade_distributions_dict
-from professors_information import update_professor_information_dict
-from utilities import (
+from scrapers.available_courses import update_available_courses_dict
+from scrapers.course_information import update_course_information_dict
+from scrapers.course_statistics import update_course_statistics_dict
+from scrapers.grade_distributions import update_grade_distributions_dict
+from scrapers.professors_information import update_professor_information_dict
+from scrapers.utilities import (
     AVAILABLE_COURSES_FN,
     COURSE_INFORMATION_FN,
     COURSE_STATISTICS_FN,

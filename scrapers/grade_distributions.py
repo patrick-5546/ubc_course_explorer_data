@@ -1,8 +1,7 @@
 from collections import defaultdict
-
 import requests
 
-from utilities import GR_API_URL, GR_CAMPUS, GRADE_DISTRIBUTIONS_FN, dump_json
+from scrapers.utilities import GR_API_URL, GR_CAMPUS, GRADE_DISTRIBUTIONS_FN, dump_json
 
 
 def update_grade_distributions_dict():

@@ -1,7 +1,7 @@
 import requests
 
-from available_courses import get_subjects_list
-from utilities import GR_API_URL, GR_CAMPUS, COURSE_STATISTICS_FN, dump_json
+from scrapers.available_courses import get_subjects_list
+from scrapers.utilities import GR_API_URL, GR_CAMPUS, COURSE_STATISTICS_FN, dump_json
 
 
 def update_course_statistics_dict():
