@@ -8,7 +8,7 @@ def get_grade_distributions_and_teaching_team_dicts():
     '''Returns a dictionary of the grade distributions for all courses to a json file.
         - Keys are course names: i.e, 'ENGL 100'
         - Values are lists of dictionaries, where the dictionaries are identical to the example below without the
-          'campus', 'course', 'detail', 'section', and 'subject' entries
+          'campus', 'course', 'detail', 'educators', 'section', and 'subject' entries
             - Only the overall distributions are saved for each term the course is offered, not individual sections
             - Most recent sections are first
 
@@ -58,7 +58,7 @@ def get_grade_distributions_and_teaching_team_dicts():
             # Use the 'OVERALL' section to get the grade distribution for a course
             if section == 'OVERALL':
                 grade_distrs_dict[course_name].append({k: v for k, v in term_grade_distr_dict.items()
-                                                       if k not in ['campus', 'course', 'detail',
+                                                       if k not in ['campus', 'course', 'detail', 'educators',
                                                                     'section', 'subject']})
 
             # Use the other sections to get the section teaching teams for a course
