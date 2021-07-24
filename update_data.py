@@ -19,6 +19,7 @@ from scrapers.constants import (
     PROFESSOR_INFORMATION_FN
 )
 
+
 def dump_json(filename, object):
     '''Saves an object to a json file in the root directory.'''
     with open(filename, 'w') as json_file:

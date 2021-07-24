@@ -1,4 +1,4 @@
-# data files
+# data file names
 AVAILABLE_COURSES_FN = 'available_courses.json'
 COURSE_INFORMATION_FN = 'course_information.json'
 COURSE_STATISTICS_FN = 'course_statistics.json'
