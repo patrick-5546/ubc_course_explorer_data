@@ -3,7 +3,7 @@ import json
 import math
 import requests
 
-from scrapers.constants import RMP_API_URL, RMP_CAMPUS_ID
+from .constants import RMP_API_URL, RMP_CAMPUS_ID
 
 
 def get_professor_information_dict():

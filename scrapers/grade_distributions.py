@@ -1,7 +1,7 @@
 from collections import defaultdict
 import requests
 
-from scrapers.constants import GR_API_URL, GR_CAMPUS
+from .constants import GR_API_URL, GR_CAMPUS
 
 
 def get_grade_distributions_and_teaching_team_dicts():

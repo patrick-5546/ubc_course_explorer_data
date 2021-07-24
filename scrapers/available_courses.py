@@ -1,6 +1,6 @@
 import requests
 
-from scrapers.constants import GR_API_URL, GR_CAMPUS
+from .constants import GR_API_URL, GR_CAMPUS
 
 
 def get_available_courses_dict():

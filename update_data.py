@@ -1,18 +1,18 @@
 '''
 Update the course information data used by the application, scraping it from various websites.
-Run from the repository's root directory with -h or --help to view the help message and arguments.
+Run from the repository's **parent** directory with -h or --help to view the help message and arguments.
 '''
 
 import argparse
 import json
 
-from scrapers.available_courses import get_available_courses_dict
-from scrapers.course_information import get_course_information_dict
-from scrapers.course_statistics import get_course_statistics_dict
-from scrapers.grade_distributions import get_grade_distributions_and_teaching_team_dicts
-from scrapers.professors_information import get_professor_information_dict
+from .scrapers.available_courses import get_available_courses_dict
+from .scrapers.course_information import get_course_information_dict
+from .scrapers.course_statistics import get_course_statistics_dict
+from .scrapers.grade_distributions import get_grade_distributions_and_teaching_team_dicts
+from .scrapers.professors_information import get_professor_information_dict
 
-# data file names
+DATA_DIR_PATH = 'ubc_course_explorer_data'
 AVAILABLE_COURSES_FN = 'available_courses.json'
 COURSE_INFORMATION_FN = 'course_information.json'
 COURSE_STATISTICS_FN = 'course_statistics.json'
@@ -23,7 +23,7 @@ TEACHING_TEAM_FN = 'teaching_team.json'
 
 def dump_json(filename, object):
     '''Saves an object to a json file in the root directory.'''
-    with open(filename, 'w') as json_file:
+    with open(f"{DATA_DIR_PATH}/{filename}", 'w') as json_file:
         json.dump(object, json_file)
     print(f"Saved object to {filename}")
 

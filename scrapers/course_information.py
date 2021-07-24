@@ -1,6 +1,6 @@
 import requests
 
-from scrapers.constants import EX_API_URL
+from .constants import EX_API_URL
 
 
 def get_course_information_dict():

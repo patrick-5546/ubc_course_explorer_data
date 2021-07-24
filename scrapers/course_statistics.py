@@ -1,7 +1,7 @@
 import requests
 
-from scrapers.available_courses import get_subjects_list
-from scrapers.constants import GR_API_URL, GR_CAMPUS
+from .available_courses import get_subjects_list
+from .constants import GR_API_URL, GR_CAMPUS
 
 
 def get_course_statistics_dict():
