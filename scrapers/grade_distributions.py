@@ -52,7 +52,7 @@ def get_grade_distributions_and_teaching_team_dicts():
 
         for term_grade_distr_dict in term_grade_distrs_list:
             course_name = (f"{term_grade_distr_dict['subject']} {term_grade_distr_dict['course']}"
-                            f"{term_grade_distr_dict['detail']}")
+                           f"{term_grade_distr_dict['detail']}")
             section = term_grade_distr_dict['section']
 
             # Use the 'OVERALL' section to get the grade distribution for a course
