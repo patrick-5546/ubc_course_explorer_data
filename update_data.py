@@ -11,13 +11,13 @@ from scrapers.course_information import get_course_information_dict
 from scrapers.course_statistics import get_course_statistics_dict
 from scrapers.grade_distributions import get_grade_distributions_dict
 from scrapers.professors_information import get_professor_information_dict
-from scrapers.constants import (
-    AVAILABLE_COURSES_FN,
-    COURSE_INFORMATION_FN,
-    COURSE_STATISTICS_FN,
-    GRADE_DISTRIBUTIONS_FN,
-    PROFESSOR_INFORMATION_FN
-)
+
+# data file names
+AVAILABLE_COURSES_FN = 'available_courses.json'
+COURSE_INFORMATION_FN = 'course_information.json'
+COURSE_STATISTICS_FN = 'course_statistics.json'
+GRADE_DISTRIBUTIONS_FN = 'grade_distributions.json'
+PROFESSOR_INFORMATION_FN = 'professors_information.json'
 
 
 def dump_json(filename, object):
