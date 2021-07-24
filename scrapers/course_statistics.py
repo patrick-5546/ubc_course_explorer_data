@@ -1,10 +1,10 @@
 import requests
 
 from scrapers.available_courses import get_subjects_list
-from scrapers.utilities import GR_API_URL, GR_CAMPUS, COURSE_STATISTICS_FN, dump_json
+from scrapers.utilities import GR_API_URL, GR_CAMPUS, dump_json
 
 
-def update_course_statistics_dict():
+def update_course_statistics_dict(filename):
     '''Saves a dictionary of the course statistics for all courses to a json file.
         - Keys are course names: i.e, 'ENGL 100'
         - Values are dictionaries of information, identical to the example below without the 'campus', 'course',
@@ -40,4 +40,4 @@ def update_course_statistics_dict():
              for sub_course_stats_dict in sub_courses_stats_list}
         )
 
-    dump_json(COURSE_STATISTICS_FN, course_stats_dict)
+    dump_json(filename, course_stats_dict)

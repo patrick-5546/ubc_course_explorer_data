@@ -4,7 +4,6 @@ import os
 # CONSTANTS
 
 # data files
-DATA_DIR_PATH = '.'  # files are located in the repository's root directory
 AVAILABLE_COURSES_FN = 'available_courses.json'
 COURSE_INFORMATION_FN = 'course_information.json'
 COURSE_STATISTICS_FN = 'course_statistics.json'
@@ -24,8 +23,7 @@ RMP_CAMPUS_ID = 1413
 
 
 def dump_json(filename, object):
-    '''Saves an object to a json file.'''
-    path = os.path.join(DATA_DIR_PATH, filename)
-    with open(path, 'w') as json_file:
+    '''Saves an object to a json file in the root directory.'''
+    with open(filename, 'w') as json_file:
         json.dump(object, json_file)
-    print(f"Saved object to {path}\n")
+    print(f"Saved object to file\n")

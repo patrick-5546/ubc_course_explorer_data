@@ -32,12 +32,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.available_courses:
-        update_available_courses_dict()
+        update_available_courses_dict(AVAILABLE_COURSES_FN)
     if args.course_information:
-        update_course_information_dict()
+        update_course_information_dict(COURSE_INFORMATION_FN)
     if args.course_statistics:
-        update_course_statistics_dict()
+        update_course_statistics_dict(COURSE_STATISTICS_FN)
     if args.grade_distributions:
-        update_grade_distributions_dict()
+        update_grade_distributions_dict(GRADE_DISTRIBUTIONS_FN)
     if args.professor_information:
-        update_professor_information_dict()
+        update_professor_information_dict(PROFESSOR_INFORMATION_FN)

@@ -1,9 +1,9 @@
 import requests
 
-from scrapers.utilities import GR_API_URL, GR_CAMPUS, AVAILABLE_COURSES_FN, dump_json
+from scrapers.utilities import GR_API_URL, GR_CAMPUS, dump_json
 
 
-def update_available_courses_dict():
+def update_available_courses_dict(filename):
     '''Save a dictionary of the available courses to a json file.
         - Keys are subjects: i.e., 'APSC'
         - Values are a list of their course labels: i.e., ['100', '101', '150', ...]
@@ -14,7 +14,7 @@ def update_available_courses_dict():
     for subject in get_subjects_list():
         avail_courses_dict[subject] = _get_course_labels_list(subject)
 
-    dump_json(AVAILABLE_COURSES_FN, avail_courses_dict)
+    dump_json(filename, avail_courses_dict)
 
 
 def get_subjects_list():
