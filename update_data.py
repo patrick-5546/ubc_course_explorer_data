@@ -9,7 +9,7 @@ import json
 from .scrapers.available_courses import get_available_courses_dict
 from .scrapers.course_information import get_course_information_dict
 from .scrapers.course_statistics import get_course_statistics_dict
-from .scrapers.grade_distributions import get_grade_distributions_and_teaching_team_dicts
+from .scrapers.grade_distributions_and_teaching_team import get_grade_distributions_and_teaching_team_dicts
 from .scrapers.professors_information import get_professor_information_dict
 
 DATA_DIR_PATH = 'ubc_course_explorer_data'
