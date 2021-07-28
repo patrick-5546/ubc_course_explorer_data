@@ -39,4 +39,9 @@ def get_course_information_dict():
     courses_info_dict = {course_info_dict['code']: {k: v for k, v in course_info_dict.items()
                          if k not in ['dept', 'code', 'link']} for course_info_dict in courses_info_list}
 
+    for course_name, course_info in courses_info_dict.items():
+        preq_set = set(course_info['preq'])  # remove duplicates
+        preq_set.discard(course_name)  # remove circular dependencies
+        course_info['preq'] = list(preq_set)
+
     return courses_info_dict
